@@ -1,10 +1,10 @@
 import torch
-import preprocessing
-
 from torchvision import models
 
 def save(arch, model, directory):
-    model.class_to_idx = preprocessing.train_dataset.class_to_idx
+    from train import train_dataset
+
+    model.class_to_idx = train_dataset.class_to_idx
     checkpoint = {'arch': arch,
                   'class_to_idx': model.class_to_idx,
                   'features': model.features,
@@ -13,7 +13,7 @@ def save(arch, model, directory):
     torch.save(checkpoint, directory)
     
 def load_checkpoint(path):
-    checkpoint = torch.load(path)
+    checkpoint = torch.load(path, map_location="cpu")
     
     if checkpoint['arch'] == 'vgg11':
         model = models.vgg11(pretrained=True)

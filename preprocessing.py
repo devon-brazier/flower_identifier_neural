@@ -11,26 +11,29 @@ train_dir = data_dir + '/train'
 valid_dir = data_dir + '/valid'
 test_dir = data_dir + '/test'
 
-train_transforms = transforms.Compose([transforms.RandomResizedCrop(224),
-                                       transforms.RandomRotation(30), 
-                                       transforms.RandomHorizontalFlip(),
-                                       transforms.ToTensor(),
-                                       transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                                                std=[0.229, 0.224, 0.225])])
+def datasets():
+    train_transforms = transforms.Compose([transforms.RandomResizedCrop(224),
+                                           transforms.RandomRotation(30),
+                                           transforms.RandomHorizontalFlip(),
+                                           transforms.ToTensor(),
+                                           transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                                    std=[0.229, 0.224, 0.225])])
 
-test_transforms = transforms.Compose([transforms.Resize(224), 
-                                      transforms.CenterCrop(224),
-                                      transforms.ToTensor(),
-                                      transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                                               std=[0.229, 0.224, 0.225])])
+    test_transforms = transforms.Compose([transforms.Resize(224),
+                                          transforms.CenterCrop(224),
+                                          transforms.ToTensor(),
+                                          transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                                   std=[0.229, 0.224, 0.225])])
 
-train_dataset = datasets.ImageFolder(train_dir, transform=train_transforms)
-valid_dataset = datasets.ImageFolder(valid_dir, transform=test_transforms)
-test_dataset = datasets.ImageFolder(test_dir, transform=test_transforms)
+    train_dataset = datasets.ImageFolder(train_dir, transform=train_transforms)
+    valid_dataset = datasets.ImageFolder(valid_dir, transform=test_transforms)
+    test_dataset = datasets.ImageFolder(test_dir, transform=test_transforms)
 
-trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
-validloader = torch.utils.data.DataLoader(valid_dataset, batch_size=64, shuffle=True)
-testloader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=True)
+    trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
+    validloader = torch.utils.data.DataLoader(valid_dataset, batch_size=64, shuffle=True)
+    testloader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=True)
+
+    return train_dataset, valid_dataset, test_dataset, trainloader, validloader, testloader
     
 def centre_coords(image, crop_size):
     image_height, image_width = image.size
@@ -39,7 +42,8 @@ def centre_coords(image, crop_size):
     left = (image_width - crop_width) / 2
     bottom = (image_height + crop_height) / 2
     right = (image_width + crop_width) / 2
-    return (left, top, right, bottom)
+    return left, top, right, bottom
+
 
 def process_image(image):
     ''' Scales, crops, and normalizes a PIL image for a PyTorch model,

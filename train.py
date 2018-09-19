@@ -19,8 +19,6 @@ parser.add_argument('--gpu', action="store_true", dest='gpu_bool', default=False
 options = parser.parse_args()
 epochs = options.epochs
 
-print(options)
-
 if options.arch == 'vgg11':
     model = models.vgg11(pretrained=True)
 elif options.arch == 'vgg13':
@@ -38,7 +36,7 @@ model.classifier = Network(options.hidden_units, class_input)
 criterion = nn.NLLLoss()
 optimizer = optim.Adam(params=model.classifier.parameters(), lr=options.learnrate)
 
-trainloader, validloader, testloader = preprocessing.trainloader, preprocessing.validloader, preprocessing.testloader
+train_dataset, valid_dataset, test_dataset, trianloader, validloader, testloader = preprocessing.datasets()
 
 def validation(model, valid_loader, criterion):
     valid_loss = 0

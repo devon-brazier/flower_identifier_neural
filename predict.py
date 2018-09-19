@@ -1,6 +1,6 @@
 import save_load
 import argparse
-import preprocessing
+from preprocessing import process_image
 import pandas as pd
 import json
 import torch
@@ -26,7 +26,7 @@ def predict(image_path, checkpoint, top_k):
     model.class_to_idx = {v: k for k, v in model.class_to_idx.items()}
 
     image = Image.open(image_path)
-    processed_img = torch.from_numpy(preprocessing.process_image(image))
+    processed_img = torch.from_numpy(process_image(image))
     processed_img = processed_img.unsqueeze(0).float()
 
     if options.gpu_bool:
